@@ -101,4 +101,11 @@ defmodule TaskTracker.Users do
   def change_user(%User{} = user) do
     User.changeset(user, %{})
   end
+
+  @doc """
+  Get a user by its username.
+  """
+  def get_user_by_username(username) do
+   Repo.get_by(User, username: username)
+ end
 end
