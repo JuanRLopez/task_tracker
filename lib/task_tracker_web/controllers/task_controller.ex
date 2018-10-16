@@ -31,6 +31,11 @@ defmodule TaskTrackerWeb.TaskController do
     render(conn, "show.html", task: task)
   end
 
+  def show_all(conn, %{}) do
+    tasks = Tasks.list_tasks()
+    render(conn, "index.html", tasks: tasks)
+  end
+
   def edit(conn, %{"id" => id}) do
     task = Tasks.get_task!(id)
     changeset = Tasks.change_task(task)
