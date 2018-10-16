@@ -4,11 +4,11 @@ defmodule TaskTracker.Tasks.Task do
 
 
   schema "tasks" do
-    field :assigned_on, :utc_datetime
-    field :assigned_user, :string
     field :completed, :boolean, default: false
     field :description, :string
+    field :time_worked, :integer
     field :title, :string
+    belongs_to :user, TaskTracker.Users.User
 
     timestamps()
   end
@@ -16,7 +16,7 @@ defmodule TaskTracker.Tasks.Task do
   @doc false
   def changeset(task, attrs) do
     task
-    |> cast(attrs, [:title, :description, :assigned_user, :assigned_on, :completed])
-    |> validate_required([:title, :description, :assigned_user, :assigned_on, :completed])
+    |> cast(attrs, [:title, :description, :user_id, :time_worked, :completed])
+    |> validate_required([:title, :description, :user_id, :time_worked, :completed])
   end
 end
