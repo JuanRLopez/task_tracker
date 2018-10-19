@@ -13,12 +13,12 @@
           </div>
           <div class="task-actions">
             <div class="dropdown">
-              <button class="btn btn-primary dropdown-toggle" type="button" id="task-actions" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" disabled>
+              <button class="btn btn-primary dropdown-toggle" type="button" id="task-actions" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                 Actions
               </button>
               <ul class="dropdown-menu" aria-labelledby="task-actions">
                 <%= link "Edit", to: Routes.task_path(@conn, :edit, task), class: "dropdown-item" %>
-                <%= link "Delete", to: Routes.task_path(@conn, :delete, task), method: :delete, class: "dropdown-item" %>
+                <%= link "Delete", to: Routes.task_path(@conn, :delete, task), method: :delete, data: [confirm: "Are you sure?"], class: "dropdown-item" %>
               </ul>
             </div>
           </div>
