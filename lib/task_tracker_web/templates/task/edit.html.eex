@@ -1,5 +1,4 @@
-<h1>Edit Task</h1>
-
-<%= render "form.html", Map.put(assigns, :action, Routes.task_path(@conn, :update, @task)) %>
-
-<span><%= link "Back", to: Routes.task_path(@conn, :index) %></span>
+<div class="col-6">
+  <h1>Edit Task</h1>
+  <%= render "edit-form.html", Map.put(assigns, :action, Routes.task_path(@conn, :update, @task)) %>
+</div>

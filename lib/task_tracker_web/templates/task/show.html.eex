@@ -1,33 +1,41 @@
-<h1>Show Task</h1>
+<div class="col-12">
+  <div class="row">
+    <div class="col-12">
+      <h3><%= @task.title %></h3>
+    </div>
+  </div>
 
-<ul>
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <div class="card-body">
+          <div>
+            <strong>Description:</strong>
+          </div>
+          <div>
+            <%= @task.description %>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
 
-  <li>
-    <strong>Title:</strong>
-    <%= @task.title %>
-  </li>
+  <div class="row">
+    <div class="col-4">
+      <strong>Assigned user:</strong>
+      <%= @task.assigned_user %>
+    </div>
+    <div class="col-4">
+      <strong>Time worked:</strong>
+      <%= @task.time_worked %> mins
+    </div>
+    <div class="col-4">
+      <strong>Completed:</strong>
+      <%= @task.completed %>
+    </div>
+  </div>
 
-  <li>
-    <strong>Description:</strong>
-    <%= @task.description %>
-  </li>
-
-  <li>
-    <strong>Assigned user:</strong>
-    <%= @task.assigned_user %>
-  </li>
-
-  <li>
-    <strong>Assigned on:</strong>
-    <%= @task.assigned_on %>
-  </li>
-
-  <li>
-    <strong>Completed:</strong>
-    <%= @task.completed %>
-  </li>
-
-</ul>
-
-<span><%= link "Edit", to: Routes.task_path(@conn, :edit, @task) %></span>
-<span><%= link "Back", to: Routes.task_path(@conn, :index) %></span>
+  <span><%= link "Edit", to: Routes.task_path(@conn, :edit, @task), class: "btn btn-primary" %></span>
+  <span><%= link "Back", to: Routes.task_path(@conn, :index), class: "btn btn-secondary" %></span>
+  <span class="delete-btn"><%= link "Delete", to: Routes.task_path(@conn, :delete, @task), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger" %></span>
+</div>

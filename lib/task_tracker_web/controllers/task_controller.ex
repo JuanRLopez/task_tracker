@@ -6,7 +6,7 @@ defmodule TaskTrackerWeb.TaskController do
 
   def index(conn, _params) do
     tasks = Tasks.list_tasks()
-    render(conn, "index.html", tasks: tasks)
+    render(conn, "index.html", tasks: add_usernames(tasks))
   end
 
   def new(conn, _params) do
@@ -19,7 +19,7 @@ defmodule TaskTrackerWeb.TaskController do
       {:ok, task} ->
         conn
         |> put_flash(:info, "Task created successfully.")
-        |> redirect(to: Routes.task_path(conn, :show, task))
+        |> redirect(to: Routes.task_path(conn, :show, %Task{:id => task.id}))
 
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, "new.html", changeset: changeset)
@@ -28,16 +28,12 @@ defmodule TaskTrackerWeb.TaskController do
 
   def show(conn, %{"id" => id}) do
     task = Tasks.get_task!(id)
-    render(conn, "show.html", task: task)
-  end
-
-  def show_all(conn, %{}) do
-    tasks = Tasks.list_tasks()
-    render(conn, "index.html", tasks: tasks)
+    render(conn, "show.html", task: Enum.at(add_usernames([task]), 0))
   end
 
   def edit(conn, %{"id" => id}) do
     task = Tasks.get_task!(id)
+    task = Enum.at(add_usernames([task]), 0)
     changeset = Tasks.change_task(task)
     render(conn, "edit.html", task: task, changeset: changeset)
   end
@@ -63,5 +59,9 @@ defmodule TaskTrackerWeb.TaskController do
     conn
     |> put_flash(:info, "Task deleted successfully.")
     |> redirect(to: Routes.task_path(conn, :index))
+  end
+
+  defp add_usernames(tasks) do
+    Enum.map(tasks, fn task -> Map.put(task, :assigned_user, TaskTracker.Users.get_user!(task.user_id).username) end)
   end
 end

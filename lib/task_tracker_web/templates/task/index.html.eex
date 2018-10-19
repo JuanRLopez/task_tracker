@@ -1,34 +1,37 @@
-<h1>Listing Tasks</h1>
-
-<table>
-  <thead>
-    <tr>
-      <th>Title</th>
-      <th>Description</th>
-      <th>Assigned user</th>
-      <th>Assigned on</th>
-      <th>Completed</th>
-
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-<%= for task <- @tasks do %>
-    <tr>
-      <td><%= task.title %></td>
-      <td><%= task.description %></td>
-      <td><%= task.assigned_user %></td>
-      <td><%= task.assigned_on %></td>
-      <td><%= task.completed %></td>
-
-      <td>
-        <%= link "Show", to: Routes.task_path(@conn, :show, task) %>
-        <%= link "Edit", to: Routes.task_path(@conn, :edit, task) %>
-        <%= link "Delete", to: Routes.task_path(@conn, :delete, task), method: :delete, data: [confirm: "Are you sure?"] %>
-      </td>
-    </tr>
-<% end %>
-  </tbody>
-</table>
-
-<span><%= link "New Task", to: Routes.task_path(@conn, :new) %></span>
+<div class="col-2"></div>
+<div class="col-8">
+  <%= if !Enum.empty?(@tasks) do %>
+    <%= for task <- @tasks do %>
+      <div class="card">
+        <div class="card-body">
+          <div class="task-info">
+	    <div class="task-header">
+              <%= link task.title, to: Routes.task_path(@conn, :show, task) %>
+            </div>
+            <b>Assigned to:</b> <%= task.assigned_user %> |
+            <b>Completed?</b> <%= task.completed %>
+          </div>
+          <div class="task-actions">
+            <div class="dropdown">
+              <button class="btn btn-primary dropdown-toggle" type="button" id="task-actions" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" disabled>
+                Actions
+              </button>
+              <ul class="dropdown-menu" aria-labelledby="task-actions">
+                <%= link "Edit", to: Routes.task_path(@conn, :edit, task), class: "dropdown-item" %>
+                <%= link "Delete", to: Routes.task_path(@conn, :delete, task), method: :delete, class: "dropdown-item" %>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    <% end %>
+  <% else %>
+    <div class="card">
+      <div class="card-body">
+        <h5>:( This place looks kind of empty... Add a task!</h5>
+        <%= link "Add Task", to: Routes.task_path(@conn, :new), class: "btn btn-primary" %>
+      </div>
+    </div>
+  <% end %>
+</div>
+<div class="col-2"></div>

@@ -3,11 +3,12 @@ defmodule TaskTrackerWeb.SessionController do
 
   def create(conn, %{"username" => username}) do
     user = TaskTracker.Users.get_user_by_username(username)
+    IO.puts("\n #{inspect(user)} \n")
     if user do
       conn
       |> put_session(:username, user.username)
       |> put_flash(:info, "Welcome back #{user.username}")
-      |> redirect(to: Routes.page_path(conn, :index))
+      |> redirect(to: Routes.task_path(conn, :index))
     else
       conn
       |> put_flash(:error, "Login failed.")

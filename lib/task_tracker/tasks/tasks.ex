@@ -50,6 +50,17 @@ defmodule TaskTracker.Tasks do
 
   """
   def create_task(attrs \\ %{}) do
+    # user_id, time_worked, completed
+    
+    user_id = case attrs["assigned_user"] do
+      "" -> -1
+      _ -> TaskTracker.Users.get_user_by_username(attrs["assigned_user"]).id
+    end
+    attrs = Map.delete(attrs, "assigned_user")
+    attrs = Map.put(attrs, "user_id", user_id)
+    attrs = Map.put(attrs, "completed", false)
+    attrs = Map.put(attrs, "time_worked", 0)
+
     %Task{}
     |> Task.changeset(attrs)
     |> Repo.insert()
@@ -68,6 +79,12 @@ defmodule TaskTracker.Tasks do
 
   """
   def update_task(%Task{} = task, attrs) do
+    user_id = case attrs["assigned_user"] do
+      "" -> -1
+      _ -> TaskTracker.Users.get_user_by_username(attrs["assigned_user"]).id
+    end
+    attrs = Map.put(attrs, "user_id", user_id)
+
     task
     |> Task.changeset(attrs)
     |> Repo.update()
@@ -86,6 +103,7 @@ defmodule TaskTracker.Tasks do
 
   """
   def delete_task(%Task{} = task) do
+    IO.puts("\n#{inspect(task)}\n")
     Repo.delete(task)
   end
 

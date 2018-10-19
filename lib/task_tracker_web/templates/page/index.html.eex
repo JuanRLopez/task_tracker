@@ -1,5 +1,15 @@
 <div class="row">
   <div class="col-12">
     <h1>Welcome to the Task Tracker</h1>
+    <%= if @current_user do %>
+      <span><%= link "See the tasks!", to: Routes.task_path(@conn, :index), class: "btn btn-primary" %></span>
+    <% else %>
+      <%= form_for @conn, Routes.session_path(@conn, :create),
+  	  [class: "form-inline"], fn f -> %>
+        <%= text_input f, :username, class: "form-control" %>
+        <%= submit "Login", class: "btn btn-secondary" %>
+      <% end %>
+      <p><%= link "or Register", to: Routes.user_path(@conn, :new) %></p>
+    <% end %>
   </div>
 </div>

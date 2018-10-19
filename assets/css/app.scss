@@ -1,4 +1,16 @@
 /* This file is for your main application css. */
 
-@import "./phoenix.css";
+//@import "./phoenix.css";
 @import "~bootstrap/scss/bootstrap";
+
+.nav-text {
+  color: white !important;
+}
+
+.task-actions, .user-info, .delete-btn {
+  float: right !important;
+}
+
+.task-info {
+  float: left !important;
+}

@@ -5,11 +5,14 @@
     </div>
   <% end %>
 
-  <%= label f, :username %>
-  <%= text_input f, :username %>
-  <%= error_tag f, :username %>
+  <div class="form-group">
+    <%= label f, :usernme %>
+    <%= text_input f, :username, class: "form-control" %>
+    <%= error_tag f, :username %>
+  </div>
 
   <div>
-    <%= submit "Save" %>
+    <%= submit "Save", class: "btn btn-primary" %>
+    <span><%= link "Back", to: Routes.page_path(@conn, :index), class: "btn btn-secondary" %></span>
   </div>
 <% end %>
