@@ -22,6 +22,15 @@ defmodule TaskTracker.Users do
   end
 
   @doc """
+  Returns a list of usernames that some user manages.
+  """
+  def get_manage_list(id) do
+    Repo.all from u in User,
+      where: u.manager_id = ^id,
+      select: u.username
+  end
+
+  @doc """
   Gets a single user.
 
   Raises `Ecto.NoResultsError` if the User does not exist.

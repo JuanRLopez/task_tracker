@@ -28,6 +28,10 @@ defmodule TaskTrackerWeb.UserController do
 
   def show(conn, %{"id" => id}) do
     user = Users.get_user!(id)
+    # add manager name
+    user = Map.put(user, :manager, Users.get_user!(user.manager_id).username)
+    # add user.manages
+    user = Map.put(user, :manages, Users.get_manage_list(user.id))
     render(conn, "show.html", user: user)
   end
 
