@@ -1,20 +1,23 @@
 <div class="col-6">
-  <h1>@user.username</h1>
+  <h1><%= @user.username %></h1>
 
   <div>
     <strong>Manager:</strong>
-    <%= @user.manager %>
+    <%= @user.manager.username %>
   </div>
 
   <div>
-    <strong>You manage:</strong>
-    <ul>
-      <%= for employee -> @user.manages do %>
-        <li>
-          employee
-        </li>
-      <% end %>
-    </ul>
+    <%= if !Enum.empty?(@user.employees) do %>
+      <strong>You manage:</strong>
+      <ul>
+        <%= for employee <- @user.employees do %>
+          <li>
+            <%= employee.username %>
+          </li>
+        <% end %>
+      </ul>
+    <% end %>
   </div>
-  <span><%= link "Back", to: Routes.task_path(@conn, :index) %></span>
+  <span><%= link "Edit", to: Routes.user_path(@conn, :edit, @user), class: "btn btn-primary" %></span>
+  <span><%= link "Back", to: Routes.task_path(@conn, :index), class: "btn btn-secondary" %></span>
 </div>

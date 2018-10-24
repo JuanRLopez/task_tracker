@@ -10,13 +10,16 @@ defmodule TaskTrackerWeb.UserController do
   end
 
   def new(conn, _params) do
-    changeset = Users.change_user(%User{})
+    user = %User{}
+    |> Map.put(:manager, nil)
+    |> Map.put(:employees, nil)
+    changeset = Users.change_user(user)
     render(conn, "new.html", changeset: changeset)
   end
 
   def create(conn, %{"user" => user_params}) do
     case Users.create_user(user_params) do
-      {:ok, user} ->
+      {:ok, _} ->
         conn
         |> put_flash(:info, "User created successfully.")
         |> redirect(to: "/")
@@ -27,28 +30,30 @@ defmodule TaskTrackerWeb.UserController do
   end
 
   def show(conn, %{"id" => id}) do
-    user = Users.get_user!(id)
-    # add manager name
-    user = Map.put(user, :manager, Users.get_user!(user.manager_id).username)
-    # add user.manages
-    user = Map.put(user, :manages, Users.get_manage_list(user.id))
+    user = Users.get_user(id)
     render(conn, "show.html", user: user)
   end
 
   def edit(conn, %{"id" => id}) do
     user = Users.get_user!(id)
+    user = Map.put(user, :manager, Users.get_user!(user.manager_id).username)
+    IO.puts("\n[USER edit]\n#{inspect(user)}\n")
     changeset = Users.change_user(user)
     render(conn, "edit.html", user: user, changeset: changeset)
   end
 
   def update(conn, %{"id" => id, "user" => user_params}) do
-    user = Users.get_user!(id)
 
+    IO.puts("\n[ID]\n#{id}\n")
+    IO.puts("\n[USER PARAMS]\n#{inspect(user_params)}\n")
+    #current_user = TaskTrackerWeb.Plugs.FetchSession.call(conn, %{}).assigns.current_user
+
+    user = Users.get_user!(id)
     case Users.update_user(user, user_params) do
-      {:ok, user} ->
+      {:ok, _} ->
         conn
         |> put_flash(:info, "User updated successfully.")
-        |> redirect(to: Routes.user_path(conn, :show, user))
+        |> redirect(to: Routes.user_path(conn, :show, Users.get_user(user.id)))
 
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, "edit.html", user: user, changeset: changeset)
