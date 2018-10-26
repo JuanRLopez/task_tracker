@@ -55,10 +55,11 @@ end
 # when running `mix release`, the first release in the file
 # will be used by default
 
-release :task_tracker do
+release :task_tracker_v2 do
   set version: current_version(:task_tracker)
   set applications: [
-    :runtime_tools
+    :runtime_tools,
+    :task_tracker
   ]
 end
 

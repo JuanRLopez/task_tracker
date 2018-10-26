@@ -16,11 +16,11 @@ mix compile
 mix phx.digest
 
 echo "Generating release..."
-mix release
+mix release --name=task_tracker_v2
 
 #echo "Stopping old copy of app, if any..."
 #_build/prod/rel/draw/bin/practice stop || true
 
 echo "Starting app..."
 
-_build/prod/rel/task_tracker/bin/task_tracker foreground
+_build/prod/rel/task_tracker_v2/bin/task_tracker_v2 foreground
