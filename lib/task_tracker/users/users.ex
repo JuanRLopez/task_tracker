@@ -22,6 +22,16 @@ defmodule TaskTracker.Users do
   end
 
   @doc """
+  Returns a list of usernames that some user manages.
+  """
+  def get_manage_list(id) do
+    user = Repo.get!(User, id)
+    user = Repo.preload(user, :employees)
+    user = Enum.map(user.employees, &(&1.username))
+    user
+  end
+
+  @doc """
   Gets a single user.
 
   Raises `Ecto.NoResultsError` if the User does not exist.
@@ -37,6 +47,13 @@ defmodule TaskTracker.Users do
   """
   def get_user!(id), do: Repo.get!(User, id)
 
+  def get_user(id) do
+    user = Repo.one from u in User,
+      where: u.id == ^id,
+      preload: [:employees, :manager]
+    user
+  end
+ 
   @doc """
   Creates a user.
 
@@ -49,7 +66,17 @@ defmodule TaskTracker.Users do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_user(attrs \\ %{}) do
+  def create_user(attrs \\ %{}) do	
+    manager_id = case attrs["manager"] do
+      "" -> -1
+      _ -> TaskTracker.Users.get_user_by_username(attrs["manager"]).id
+    end
+    
+    attrs = attrs
+    |> Map.put("manager_id", manager_id)
+    |> Map.delete("manager")
+    |>  Map.delete("employees")
+    
     %User{}
     |> User.changeset(attrs)
     |> Repo.insert()
@@ -68,6 +95,16 @@ defmodule TaskTracker.Users do
 
   """
   def update_user(%User{} = user, attrs) do
+    manager_id = case attrs["manager"] do
+      "" -> -1
+      _ -> TaskTracker.Users.get_user_by_username(attrs["manager"]).id
+    end
+
+    attrs = attrs
+    |> Map.put("manager_id", manager_id)
+    |> Map.delete("manager")
+    |> Map.delete("employees")
+
     user
     |> User.changeset(attrs)
     |> Repo.update()
@@ -107,5 +144,5 @@ defmodule TaskTracker.Users do
   """
   def get_user_by_username(username) do
    Repo.get_by(User, username: username)
- end
+  end
 end

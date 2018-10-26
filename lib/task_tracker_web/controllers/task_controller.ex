@@ -15,7 +15,8 @@ defmodule TaskTrackerWeb.TaskController do
   end
 
   def create(conn, %{"task" => task_params}) do
-    case Tasks.create_task(task_params) do
+    current_user = TaskTrackerWeb.Plugs.FetchSession.call(conn, %{}).assigns.current_user
+    case Tasks.create_task(task_params, current_user) do
       {:ok, task} ->
         conn
         |> put_flash(:info, "Task created successfully.")
@@ -40,8 +41,8 @@ defmodule TaskTrackerWeb.TaskController do
 
   def update(conn, %{"id" => id, "task" => task_params}) do
     task = Tasks.get_task!(id)
-
-    case Tasks.update_task(task, task_params) do
+    current_user = TaskTrackerWeb.Plugs.FetchSession.call(conn, %{}).assigns.current_user
+    case Tasks.update_task(task, task_params, current_user) do
       {:ok, task} ->
         conn
         |> put_flash(:info, "Task updated successfully.")

@@ -7,7 +7,7 @@ use Mix.Config
 # watchers to your application. For example, we use it
 # with webpack to recompile .js and .css sources.
 config :task_tracker, TaskTrackerWeb.Endpoint,
-  http: [port: 4793],
+  http: [port: 4794],
   debug_errors: true,
   code_reloader: true,
   check_origin: false,
@@ -79,8 +79,8 @@ end
 
 # Configure your database
 config :task_tracker, TaskTracker.Repo,
-  username: "task_tracker",
+  username: "task_tracker_v2",
   password: get_secret.("db_pass"),
-  database: "task_tracker_dev",
+  database: "task_tracker_v2_dev",
   hostname: "localhost",
   pool_size: 10

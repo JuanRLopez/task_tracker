@@ -5,7 +5,6 @@ defmodule TaskTracker.Tasks do
 
   import Ecto.Query, warn: false
   alias TaskTracker.Repo
-
   alias TaskTracker.Tasks.Task
 
   @doc """
@@ -35,7 +34,11 @@ defmodule TaskTracker.Tasks do
       ** (Ecto.NoResultsError)
 
   """
-  def get_task!(id), do: Repo.get!(Task, id)
+  def get_task!(id) do
+     Repo.one! from t in Task,
+       where: t.id == ^id,
+       preload: [:time_blocks]
+  end
 
   @doc """
   Creates a task.
@@ -49,21 +52,24 @@ defmodule TaskTracker.Tasks do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_task(attrs \\ %{}) do
-    # user_id, time_worked, completed
-    
+  def create_task(attrs \\ %{}, current_user) do 
     user_id = case attrs["assigned_user"] do
       "" -> -1
       _ -> TaskTracker.Users.get_user_by_username(attrs["assigned_user"]).id
     end
-    attrs = Map.delete(attrs, "assigned_user")
-    attrs = Map.put(attrs, "user_id", user_id)
-    attrs = Map.put(attrs, "completed", false)
-    attrs = Map.put(attrs, "time_worked", 0)
 
-    %Task{}
-    |> Task.changeset(attrs)
-    |> Repo.insert()
+    attrs = attrs
+    |> Map.delete("assigned_user")
+    |> Map.put("user_id", user_id)
+    |> Map.put("completed", false)
+
+    task_changeset = %Task{} |> Task.changeset(attrs)
+    user_manager_id = TaskTracker.Users.get_user!(user_id).manager_id
+    task_changeset = cond do
+      user_manager_id == current_user.id -> task_changeset
+      true -> Ecto.Changeset.add_error(task_changeset, :assigned_user, "only managers can assign tasks to their employees")
+    end
+    Repo.insert(task_changeset)
   end
 
   @doc """
@@ -78,16 +84,20 @@ defmodule TaskTracker.Tasks do
       {:error, %Ecto.Changeset{}}
 
   """
-  def update_task(%Task{} = task, attrs) do
+  def update_task(%Task{} = task, attrs, current_user) do
     user_id = case attrs["assigned_user"] do
       "" -> -1
       _ -> TaskTracker.Users.get_user_by_username(attrs["assigned_user"]).id
     end
     attrs = Map.put(attrs, "user_id", user_id)
 
-    task
-    |> Task.changeset(attrs)
-    |> Repo.update()
+    task = task |> Task.changeset(attrs)
+    user_manager_id = TaskTracker.Users.get_user!(user_id).manager_id
+    task = cond do
+      user_manager_id == current_user.id -> task
+      true -> Ecto.Changeset.add_error(task, :assigned_user, "only managers can assign tasks to their employees")
+    end
+    Repo.update(task)
   end
 
   @doc """
@@ -103,7 +113,6 @@ defmodule TaskTracker.Tasks do
 
   """
   def delete_task(%Task{} = task) do
-    IO.puts("\n#{inspect(task)}\n")
     Repo.delete(task)
   end
 

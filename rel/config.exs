@@ -16,12 +16,6 @@ use Mix.Releases.Config,
 # For a full list of config options for both releases
 # and environments, visit https://hexdocs.pm/distillery/config/distillery.html
 
-
-# You may define one or more environments in this file,
-# an environment's settings will override those of a release
-# when building in that environment, this combination of release
-# and environment configuration is called a profile
-
 get_secret = fn name ->
   base = Path.expand("~/.config/task_tracker")
   File.mkdir_p!(base)
@@ -32,6 +26,11 @@ get_secret = fn name ->
   end
   String.trim(File.read!(path))
 end
+
+# You may define one or more environments in this file,
+# an environment's settings will override those of a release
+# when building in that environment, this combination of release
+# and environment configuration is called a profile
 
 environment :dev do
   # If you are running Phoenix, you should make sure that

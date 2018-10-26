@@ -4,7 +4,11 @@ defmodule TaskTracker.Users.User do
 
 
   schema "users" do
-    field :username, :string
+    field :username, :string 
+    belongs_to :manager, TaskTracker.Users.User
+    has_many :employees, TaskTracker.Users.User, foreign_key: :manager_id
+    has_many :tasks, TaskTracker.Tasks.Task
+    has_many :time_blocks, TaskTracker.TimeBlocks.TimeBlock
 
     timestamps()
   end
@@ -12,8 +16,8 @@ defmodule TaskTracker.Users.User do
   @doc false
   def changeset(user, attrs) do
     user
-    |> cast(attrs, [:username])
-    |> validate_required([:username])
+    |> cast(attrs, [:username, :manager_id])
+    |> validate_required([:username, :manager_id])
     |> unique_constraint(:username)
   end
 end
