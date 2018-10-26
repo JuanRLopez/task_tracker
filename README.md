@@ -1,4 +1,4 @@
-# TaskTracker
+# TaskTrackeri
 
 ## Design Decisions:
 * I made users a very simple data object with just a username and an id as core data. No more user data than that was needed for hw06.
@@ -10,3 +10,10 @@
 * (currently disabled) I added an "Actions" drop-down menu for each task on the main page. This provides a user easy acess to the "Edit" and "Delete" functionalities.
 * I added the "New Task" link to the nav-bar for easy of access. It should be easy for users to add tasks, and not have to click and scroll around until they found the creation page.
 * (cosmetic): I tried to make everything look the best it could.
+
+## v2 design decisions
+* Managers can add and remove employees they manage (remove not working). This is standard.
+* Users can update who their manager is. just seemed like something that could be useful.
+* Since the user "nobody" is the default user assigned as manager, he is at the top of the management tree.
+* time blocks have a start and end datetime, and are associated to a user and task.
+* only the user that is assigned to the task can create a time block on that task. It seems silly to allow everyone to create time blocks on whatever they want. 
