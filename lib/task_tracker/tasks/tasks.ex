@@ -34,7 +34,11 @@ defmodule TaskTracker.Tasks do
       ** (Ecto.NoResultsError)
 
   """
-  def get_task!(id), do: Repo.get!(Task, id)
+  def get_task!(id) do
+     Repo.one! from t in Task,
+       where: t.id == ^id,
+       preload: [:time_blocks]
+  end
 
   @doc """
   Creates a task.
@@ -48,9 +52,7 @@ defmodule TaskTracker.Tasks do
       {:error, %Ecto.Changeset{}}
 
   """
-  def create_task(attrs \\ %{}, current_user) do
-    # user_id, time_worked, completed
-    
+  def create_task(attrs \\ %{}, current_user) do 
     user_id = case attrs["assigned_user"] do
       "" -> -1
       _ -> TaskTracker.Users.get_user_by_username(attrs["assigned_user"]).id
@@ -60,7 +62,6 @@ defmodule TaskTracker.Tasks do
     |> Map.delete("assigned_user")
     |> Map.put("user_id", user_id)
     |> Map.put("completed", false)
-    |> Map.put("time_worked", 0)
 
     task_changeset = %Task{} |> Task.changeset(attrs)
     user_manager_id = TaskTracker.Users.get_user!(user_id).manager_id

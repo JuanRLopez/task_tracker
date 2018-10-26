@@ -26,11 +26,8 @@ defmodule TaskTracker.Users do
   """
   def get_manage_list(id) do
     user = Repo.get!(User, id)
-    IO.puts("\n[USER-man]\n#{inspect(user)}\n")
     user = Repo.preload(user, :employees)
-    IO.puts("\n[USER-man]\n#{inspect(user)}\n")
     user = Enum.map(user.employees, &(&1.username))
-    IO.puts("\n[USER-man]\n#{inspect(user)}\n")
     user
   end
 
@@ -54,8 +51,6 @@ defmodule TaskTracker.Users do
     user = Repo.one from u in User,
       where: u.id == ^id,
       preload: [:employees, :manager]
-
-    IO.puts("\n#{inspect(user)}\n")
     user
   end
  

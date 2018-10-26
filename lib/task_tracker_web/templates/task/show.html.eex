@@ -26,16 +26,52 @@
       <%= @task.assigned_user %>
     </div>
     <div class="col-4">
-      <strong>Time worked:</strong>
-      <%= @task.time_worked %> mins
-    </div>
-    <div class="col-4">
       <strong>Completed:</strong>
       <%= @task.completed %>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <strong>Time worked</strong>
+    </div>
+  </div>
+
+  <div class="row">
+    <div class="col-12">
+      <div class="card">
+        <ul id="time-list">
+          <%= for block <- @task.time_blocks do %>
+            <li>
+              <%= block.start %> -> <%= block.end %>
+              <a href="#" class="badge badge-danger" id="delete-time-block" data-time-block-id="<%= block.id %>" data-task-id="<%= @task.id %>">Delete</a>
+            </li>
+          <% end %>
+        </ul>
+        
+        <div class="row" id="time-block-form">
+          <div class="col-6">
+            Start:
+            <span><input type="date" id="start-date" name="start-date" class="form-control"></span>
+            <span><input type="time" id="start-time" name="start-time" precision="second" class="form-control"></span>
+          </div>
+          <div class="col-6">
+            End:
+            <span><input type="date" id="end-date" name="end-date" class="form-control"></span>
+            <span><input type="time" id="end-time" name="end-time" precision="second" class="form-control"></span>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-12">
+            <button id="add-time-block" data-user-id="<%= @current_user.id %>" data-task-id="<%= @task.id %>" class="btn btn-success">Add time block</button>
+          </div>
+        </div>
+      </div>
     </div>
   </div>
 
   <span><%= link "Edit", to: Routes.task_path(@conn, :edit, @task), class: "btn btn-primary" %></span>
   <span><%= link "Back", to: Routes.task_path(@conn, :index), class: "btn btn-secondary" %></span>
   <span class="delete-btn"><%= link "Delete", to: Routes.task_path(@conn, :delete, @task), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-danger" %></span>
+  <p id="task-id" hidden><%= @task.id %></p>
 </div>

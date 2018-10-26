@@ -12,10 +12,22 @@
       <ul>
         <%= for employee <- @user.employees do %>
           <li>
-            <%= employee.username %>
+            <%= employee.username %> <a href="#" id="remove-employee" data-user-id="<%= @user.id %>" data-employee-username="<%= employee.username %>" class="badge badge-danger" disable>remove</a>
           </li>
         <% end %>
       </ul>
+    <% end %>
+  </div>
+
+  <div>
+    <%= form_for @conn, Routes.user_path(@conn, :update, @user), [method: :put],  fn f -> %>
+       Add employee:
+       <div class="input-group">
+         <%= text_input f, :username, class: "form-control" %>
+         <span class="input-group-btn">
+           <%= submit "Add", class: "btn btn-primary" %>
+         </span>
+       </div>
     <% end %>
   </div>
   <span><%= link "Edit", to: Routes.user_path(@conn, :edit, @user), class: "btn btn-primary" %></span>

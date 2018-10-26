@@ -8,6 +8,7 @@ defmodule TaskTracker.Users.User do
     belongs_to :manager, TaskTracker.Users.User
     has_many :employees, TaskTracker.Users.User, foreign_key: :manager_id
     has_many :tasks, TaskTracker.Tasks.Task
+    has_many :time_blocks, TaskTracker.TimeBlocks.TimeBlock
 
     timestamps()
   end
